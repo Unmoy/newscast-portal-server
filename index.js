@@ -20,7 +20,7 @@ const client = new MongoClient(uri, {
 });
 client.connect((err) => {
   const newsCollection = client.db("newsportal").collection("dailynews");
-  console.log("connected");
+  console.log("Database Connected");
   // ROUTES
 
   app.post("/addnews", (req, res) => {
@@ -54,7 +54,23 @@ client.connect((err) => {
         res.send(document[0]);
       });
   });
+  app.get("/categories/", (req, res) => {
+    if (req.query.category) {
+      newsCollection
+        .find({ category: req.query.category })
+        .toArray((err, documents) => {
+          res.send(documents);
+        });
+    } else if ((req.query.category = " ")) {
+      newsCollection.find({}).toArray((err, documents) => {
+        res.send(documents);
+      });
+    } else {
+      newsCollection.find({}).toArray((err, documents) => {
+        res.send(documents);
+      });
+    }
+  });
 });
 
-app.listen(port);
-
+app.listen(process.env.PORT || port);
